@@ -3,49 +3,49 @@ var WeightedPasswordGen = (function () {
     this.chars = chars;
     this.enabled = true;
     this.weight = 1;
-  }
-  
+  };
+
   // Leave out easily confused characters by default (l, I, 1, O, 0)
-  var _lowerLetters = new charClass("abcdefghijkmnopqrstuvwxyz");
+  var _lowerLetters = new charClass('abcdefghijkmnopqrstuvwxyz');
   // Give lowercase characters greater weight by default
   _lowerLetters.weight = 25;
-  var _upperLetters = new charClass("ABCDEFGHJKLMNPQRSTUVWXYZ");
-  var _numbers = new charClass("23456789");
-  var _symbols = new charClass("!@#$%^&*-=_+?");
+  var _upperLetters = new charClass('ABCDEFGHJKLMNPQRSTUVWXYZ');
+  var _numbers = new charClass('23456789');
+  var _symbols = new charClass('!@#$%^&*-=_+?');
 
   var charClasses = {
-    "lowerLetters": _lowerLetters, 
-    "upperLetters": _upperLetters, 
-    "numbers": _numbers, 
-    "symbols": _symbols
+    'lowerLetters': _lowerLetters,
+    'upperLetters': _upperLetters,
+    'numbers': _numbers,
+    'symbols': _symbols
   };
-  
+
   var _passwordLength = 15;
-  
+
   var _getWeightedRandomClass = function() {
     var cumulativeWeight = 0;
     var totalWeight = 0;
-  
+
     // Calculate the total weight
     for (var className in charClasses) {
       // Don't include disabled classes
-      if (charClasses[className].enabled == true) {
+      if (charClasses[className].enabled === true) {
         totalWeight += charClasses[className].weight;
       }
     }
-    
+
     var random = (Math.random() * totalWeight);
-    
-    for (var className in charClasses) {
+
+    for (className in charClasses) {
       // Don't include disabled classes
-      if (charClasses[className].enabled == true) {
+      if (charClasses[className].enabled === true) {
         cumulativeWeight += charClasses[className].weight;
         if (random < cumulativeWeight) {
           return charClasses[className];
         }
       }
     }
-  }
+  };
 
   var _shuffle = function(array) {
     var tmp, current, top = array.length;
@@ -58,15 +58,15 @@ var WeightedPasswordGen = (function () {
     }
 
     return array;
-  }
-  
+  };
+
   var genPassword = function() {
-    var passwordChars = new Array();
-    
+    var passwordChars = [];
+
     // Make sure we include at least one character from all enabled classes
     // (this isn't a strict weighted random)
     for (var className in charClasses) {
-      if (charClasses[className].enabled == true) {
+      if (charClasses[className].enabled === true) {
         // Get a random character from the character class
         passwordChars.push(
           charClasses[className].chars.charAt(
@@ -77,7 +77,7 @@ var WeightedPasswordGen = (function () {
         );
       }
     }
-    
+
     // Now fill the remaining characters
     for (var i = 0, len = _passwordLength - passwordChars.length; i < len; i++) {
       charClass = _getWeightedRandomClass();
@@ -90,21 +90,21 @@ var WeightedPasswordGen = (function () {
         )
       );
     }
-    
+
     // Now shuffle it all up for good measure
     passwordChars = _shuffle(passwordChars);
     // And put it all together in a string
-    return passwordChars.join("");
-  }
-  
+    return passwordChars.join('');
+  };
+
   var getPasswordLength = function() {
     return _passwordLength;
-  }
-  
+  };
+
   var setPasswordLength = function(newPasswordLength) {
     _passwordLength = newPasswordLength;
-  }
-  
+  };
+
   return {
     charClass: charClass,
     charClasses: charClasses,
