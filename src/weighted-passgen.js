@@ -20,7 +20,7 @@ var WeightedPasswordGen = (function () {
     'symbols': _symbols
   };
 
-  var _passwordLength = 15;
+  var _passwordLength = 16;
 
   var _getWeightedRandomClass = function() {
     var cumulativeWeight = 0;
